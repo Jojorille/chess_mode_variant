@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minimalist Chess Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        
+        <div id="header">
+            <h1 class="title">Chess</h1>
+            <div id="menu-section">
+                <select id="variant-select">
+                    <option value="classic">Standard</option>
+                    <option value="chess960">Chess 960</option>
+                    <option value="clubhouse">Club House (Crazyhouse)</option>
+                    <option value="fog">Fog of War</option>
+                    <option value="antichess">Qui perd gagne</option>
+                    <option value="hidden_queen">Dame Cachée</option>
+                    <option value="bataille">Bataille Chess</option>
+                </select>
+                <button id="create-game-btn">Créer une partie</button>
+            </div>
+            <div id="game-info" class="hidden">
+                <p>Room: <span id="room-id-display"></span></p>
+            </div>
+        </div>
+
+        <div id="lobby-area" class="hidden" style="text-align: center; padding: 40px 10px;">
+            <h2>Salle d'attente</h2>
+            <p style="margin-top: 15px;">Partagez ce lien avec votre adversaire :</p>
+            <input type="text" id="lobby-share-link" readonly style="font-size: 1.1rem; padding: 15px; margin: 20px 0; text-align: center; width: 100%;">
+            <button id="lobby-copy-link-btn" style="padding: 15px; font-weight: bold;">📋 Copier le lien</button>
+            <p id="lobby-status" style="margin-top: 20px; color: #555;">⏳ En attente de l'adversaire...</p>
+            <button id="lobby-cancel-btn" class="danger-btn" style="margin-top: 30px;">Annuler</button>
+        </div>
+
+        <div id="game-area" class="hidden">
+            <h2 id="variant-title" style="text-align: center; margin-bottom: 5px; color: #555;"></h2>
+            <h3 id="status-message" style="text-align: center; margin-bottom: 10px;"></h3>
+            <h4 id="game-over-message" class="hidden" style="text-align: center; color: #d9534f; margin-bottom: 10px;"></h4>
+            
+            <div id="bataille-setup-area" class="hidden">
+                <h4>Placez vos pièces (4 premières lignes)</h4>
+                <div id="bataille-bench" class="pocket"></div>
+                <button id="bataille-ready-btn" style="background-color: #5cb85c; margin-top:10px;">Prêt pour la Bataille !</button>
+            </div>
+
+            <div id="opponent-pocket" class="pocket hidden"></div>
+
+            <div id="board-container">
+                <div id="hidden-queen-overlay" class="hidden">
+                    <p>Sélectionnez un pion pour être votre Dame Cachée !</p>
+                </div>
+                
+                <!-- Modal de promotion -->
+                <div id="promotion-modal" class="hidden">
+                    <div>
+                        <p style="margin-bottom: 10px; font-weight:bold;">Choisissez une pièce pour la promotion</p>
+                        <div style="display:flex; justify-content:center; gap:10px;">
+                            <button class="promo-btn" data-piece="Q">♛</button>
+                            <button class="promo-btn" data-piece="R">♜</button>
+                            <button class="promo-btn" data-piece="B">♝</button>
+                            <button class="promo-btn" data-piece="N">♞</button>
+                        </div>
+                    </div>
+                </div>
+
+                <table id="chessboard"></table>
+            </div>
+
+            <div id="player-pocket" class="pocket hidden"></div>
+            
+            <div id="controls" style="margin-top: 20px;">
+                <button id="resign-btn" class="danger-btn">Quitter la partie</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="game_logic.js"></script>
+</body>
+</html>
