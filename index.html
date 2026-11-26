@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Minimalist Chess Engine</title>
+    <link rel="icon" type="image/png" href="icone_site.png">
+    <link rel="shortcut icon" type="image/png" href="icone_site.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,7 +22,16 @@
                     <option value="antichess">Qui perd gagne</option>
                     <option value="hidden_queen">Dame Cachée</option>
                     <option value="bataille">Bataille Chess</option>
+                    <option value="clash_chess">Clash Chess (Temps Réel)</option>
                 </select>
+                <div id="color-select-wrapper">
+                    <label for="color-select" class="menu-label">Votre camp :</label>
+                    <select id="color-select">
+                        <option value="random" selected>Aléatoire</option>
+                        <option value="white">Blancs</option>
+                        <option value="black">Noirs</option>
+                    </select>
+                </div>
                 <button id="create-game-btn">Créer une partie</button>
             </div>
             <div id="game-info" class="hidden">
@@ -50,6 +61,21 @@
 
             <div id="opponent-pocket" class="pocket hidden"></div>
 
+            <div id="clash-hud" class="hidden">
+                <div class="clash-score-box clash-score-white">
+                    <span class="clash-score-label">BLANCS</span>
+                    <span id="clash-score-white" class="clash-score-val">0</span>
+                </div>
+                <div class="clash-timer-box">
+                    <span id="clash-timer">05:00</span>
+                    <span id="clash-multiplier-badge" class="mult-1">×1</span>
+                </div>
+                <div class="clash-score-box clash-score-black">
+                    <span class="clash-score-label">NOIRS</span>
+                    <span id="clash-score-black" class="clash-score-val">0</span>
+                </div>
+            </div>
+
             <div id="board-container">
                 <div id="hidden-queen-overlay" class="hidden">
                     <p>Sélectionnez un pion pour être votre Dame Cachée !</p>
@@ -69,6 +95,72 @@
                 </div>
 
                 <table id="chessboard"></table>
+                <div id="clash-pieces-layer" class="hidden"></div>
+                <div id="clash-hover-layer" class="hidden">
+                    <div id="clash-hover-preview" class="clash-piece clash-hover-ghost hidden"></div>
+                </div>
+                <canvas id="clash-fx-canvas" class="hidden"></canvas>
+            </div>
+
+            <div id="clash-promotion-bar" class="hidden">
+                <span class="clash-promo-title">PROMOTION GRATUITE (0⚡) :</span>
+                <div class="clash-promo-actions">
+                    <button class="clash-promo-btn" data-piece="q" title="Dame">♛</button>
+                    <button class="clash-promo-btn" data-piece="r" title="Tour">♜</button>
+                    <button class="clash-promo-btn" data-piece="b" title="Fou">♝</button>
+                    <button class="clash-promo-btn" data-piece="n" title="Cavalier">♞</button>
+                </div>
+            </div>
+
+            <div id="clash-controls-panel" class="hidden">
+                <div id="clash-energy-container">
+                    <div class="clash-energy-header">
+                        <span id="clash-energy-label">ÉNERGIE : 6 / 20</span>
+                        <span id="clash-energy-rate-label">×1 (+1 / 2.00s)</span>
+                    </div>
+                    <div id="clash-energy-bar" class="mult-1">
+                        <div id="clash-energy-segments"></div>
+                        <canvas id="clash-energy-fx-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div id="clash-deck">
+                    <div class="clash-deck-card" data-piece="p" data-key="a">
+                        <span class="clash-card-cost">1⚡</span>
+                        <span class="clash-card-act">0.1s</span>
+                        <span class="clash-card-glyph">♙</span>
+                        <span class="clash-card-name">Pion</span>
+                        <span class="clash-card-key">A</span>
+                    </div>
+                    <div class="clash-deck-card" data-piece="n" data-key="z">
+                        <span class="clash-card-cost">3⚡</span>
+                        <span class="clash-card-act">1.0s</span>
+                        <span class="clash-card-glyph">♘</span>
+                        <span class="clash-card-name">Cavalier</span>
+                        <span class="clash-card-key">Z</span>
+                    </div>
+                    <div class="clash-deck-card" data-piece="b" data-key="e">
+                        <span class="clash-card-cost">3⚡</span>
+                        <span class="clash-card-act">1.0s</span>
+                        <span class="clash-card-glyph">♗</span>
+                        <span class="clash-card-name">Fou</span>
+                        <span class="clash-card-key">E</span>
+                    </div>
+                    <div class="clash-deck-card" data-piece="r" data-key="r">
+                        <span class="clash-card-cost">5⚡</span>
+                        <span class="clash-card-act">1.5s</span>
+                        <span class="clash-card-glyph">♖</span>
+                        <span class="clash-card-name">Tour</span>
+                        <span class="clash-card-key">R</span>
+                    </div>
+                    <div class="clash-deck-card" data-piece="q" data-key="t">
+                        <span class="clash-card-cost">9⚡</span>
+                        <span class="clash-card-act">2.0s</span>
+                        <span class="clash-card-glyph">♕</span>
+                        <span class="clash-card-name">Dame</span>
+                        <span class="clash-card-key">T</span>
+                    </div>
+                </div>
             </div>
 
             <div id="player-pocket" class="pocket hidden"></div>
@@ -79,6 +171,8 @@
         </div>
 
     </div>
+
+    <div id="clash-drag-ghost" class="hidden"></div>
 
     <script src="game_logic.js"></script>
 </body>
