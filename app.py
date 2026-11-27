@@ -1,8 +1,12 @@
-import asyncio, json, uuid, random, copy, time
+import asyncio, json, uuid, random, copy, time, os
+from pathlib import Path
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import uvicorn
 from clash_chess import ClashChessEngine, TICK_INTERVAL
+
+BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -719,7 +723,23 @@ async def get_room_info(room_id: str):
         "guest_color": room.guest_color,
     }
 
+@app.get("/")
+@app.get("/index.html")
+async def serve_index():
+    return FileResponse(BASE_DIR / "index.html")
+
+@app.get("/style.css")
+async def serve_css():
+    return FileResponse(BASE_DIR / "style.css", media_type="text/css")
+
+@app.get("/game_logic.js")
+async def serve_js():
+    return FileResponse(BASE_DIR / "game_logic.js", media_type="application/javascript")
+
+@app.get("/icone_site.png")
+async def serve_favicon():
+    return FileResponse(BASE_DIR / "icone_site.png", media_type="image/png")
+
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("app:app", host="0.0.0.0", port=port)
