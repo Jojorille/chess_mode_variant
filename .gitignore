@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local notes & temporary files
+bug.docx
+diff_id.txt
+
+# OS files
+.DS_Store
+Thumbs.db
